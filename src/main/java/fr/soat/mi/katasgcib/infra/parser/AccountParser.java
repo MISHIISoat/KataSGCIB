@@ -9,5 +9,5 @@ public interface AccountParser {
 
     List<Account> getAllAccount() throws IOException;
 
-    void saveAllAccounts(List<Account> accounts);
+    void saveAllAccounts(List<Account> accounts) throws IOException;
 }

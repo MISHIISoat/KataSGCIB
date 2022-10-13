@@ -43,4 +43,24 @@ class AccountParserImplTest {
             assertThat(accountList).isEqualTo(expectedList);
         }
     }
+
+    @Nested
+    class SaveAllAccount {
+        @Test
+        void should_save_all_accounts_in_accounts_csv_file() throws IOException {
+            var accountList = List.of(
+                    new Account("accountName", 156.3),
+                    new Account("account2", 254.4)
+            );
+
+            accountParser.saveAllAccounts(accountList);
+
+            var content = fileReader.readTextFile(Application.ACCOUNTS_FILE);
+
+            var expectedContent = "name;amount" + System.lineSeparator() +
+                    "accountName;156.3" + System.lineSeparator() +
+                    "account2;254.4" + System.lineSeparator();
+            assertThat(content).isEqualTo(expectedContent);
+        }
+    }
 }
