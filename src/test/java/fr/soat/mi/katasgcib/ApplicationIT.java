@@ -26,8 +26,8 @@ class ApplicationIT {
             var file = new File(Application.ACCOUNTS_FILE);
             assertThat(file.exists()).isTrue();
             var content = Files.readString(accountFilePath);
-            var expectedResult = "name;account" + System.lineSeparator()
-                    + "10;user" + System.lineSeparator();
+            var expectedResult = "name;amount" + System.lineSeparator()
+                    + "user;10.0" + System.lineSeparator();
 
             assertThat(content).isEqualTo(expectedResult);
         }
@@ -35,24 +35,23 @@ class ApplicationIT {
         @Test
         void when_account_csv_contain_user_account_to_10_when_user_deposit_15_user_account_should_be_25() throws Exception {
             try (var fileWriter = new FileWriter(Application.ACCOUNTS_FILE)) {
-                var contentFile = "name;account" + System.lineSeparator()
-                        + "john;100" + System.lineSeparator()
-                        + "user;10" + System.lineSeparator()
-                        + "doe;99" + System.lineSeparator();
+                var contentFile = "name;amount" + System.lineSeparator()
+                        + "john;100.0" + System.lineSeparator()
+                        + "user;10.0" + System.lineSeparator()
+                        + "doe;99.0" + System.lineSeparator();
                 fileWriter.write(contentFile);
-
-                Application.main(new String[]{"deposit", "15", "user"});
-
-                var file = new File(Application.ACCOUNTS_FILE);
-                assertThat(file.exists()).isTrue();
-                var content = Files.readString(Path.of(Application.ACCOUNTS_FILE));
-                var expectedResult = "name;account" + System.lineSeparator()
-                        + "john;100" + System.lineSeparator()
-                        + "user;15" + System.lineSeparator()
-                        + "doe;99" + System.lineSeparator();
-
-                assertThat(content).isEqualTo(expectedResult);
             }
+            Application.main(new String[]{"deposit", "15", "user"});
+
+            var file = new File(Application.ACCOUNTS_FILE);
+            assertThat(file.exists()).isTrue();
+            var content = Files.readString(Path.of(Application.ACCOUNTS_FILE));
+            var expectedResult = "name;amount" + System.lineSeparator()
+                    + "john;100.0" + System.lineSeparator()
+                    + "user;25.0" + System.lineSeparator()
+                    + "doe;99.0" + System.lineSeparator();
+
+            assertThat(content).isEqualTo(expectedResult);
         }
     }
 
