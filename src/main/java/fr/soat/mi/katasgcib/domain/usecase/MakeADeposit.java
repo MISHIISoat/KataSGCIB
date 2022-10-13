@@ -18,7 +18,7 @@ public class MakeADeposit {
         } else {
             var foundAccount = maybeAccount.get();
             var accountToUpdate = new Account(foundAccount.name(), foundAccount.amount() + amount);
-            accountRepository.updateAmount(accountToUpdate);
+            accountRepository.update(accountToUpdate);
         }
 
     }

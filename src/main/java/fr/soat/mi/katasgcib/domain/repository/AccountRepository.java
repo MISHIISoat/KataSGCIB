@@ -11,5 +11,5 @@ public interface AccountRepository {
 
     void add(Account account);
 
-    void updateAmount(Account account);
+    void update(Account account);
 }

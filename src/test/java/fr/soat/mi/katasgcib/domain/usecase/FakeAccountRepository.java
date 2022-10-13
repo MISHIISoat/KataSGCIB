@@ -32,7 +32,7 @@ public class FakeAccountRepository implements AccountRepository {
     }
 
     @Override
-    public void updateAmount(Account account) {
+    public void update(Account account) {
         this.findByName(account.name()).ifPresent(foundAccount -> {
             var indexAccount = accounts.indexOf(foundAccount);
             accounts.set(indexAccount, account);
