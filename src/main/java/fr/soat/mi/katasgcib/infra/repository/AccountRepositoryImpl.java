@@ -4,6 +4,7 @@ import fr.soat.mi.katasgcib.domain.model.Account;
 import fr.soat.mi.katasgcib.domain.repository.AccountRepository;
 import fr.soat.mi.katasgcib.infra.parser.AccountParser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -15,14 +16,14 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public Boolean existsByName(String accountName) {
+    public Boolean existsByName(String accountName) throws IOException {
         return accountParser.getAllAccount()
                 .stream()
                 .anyMatch(account -> account.name().equals(accountName));
     }
 
     @Override
-    public Optional<Account> findByName(String accountName) {
+    public Optional<Account> findByName(String accountName) throws IOException {
         return accountParser.getAllAccount()
                 .stream()
                 .filter(account -> account.name().equals(accountName))
@@ -30,7 +31,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void add(Account account) {
+    public void add(Account account) throws IOException {
         var accountList = new ArrayList<>(accountParser.getAllAccount());
         accountList.add(account);
 
@@ -38,7 +39,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void update(Account accountToUpdate) {
+    public void update(Account accountToUpdate) throws IOException {
         var accounts = new ArrayList<>(accountParser.getAllAccount());
 
         var maybeAccount = accounts.stream()

@@ -5,6 +5,8 @@ import fr.soat.mi.katasgcib.domain.repository.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class MakeADepositTest {
@@ -18,7 +20,7 @@ class MakeADepositTest {
     }
 
     @Test
-    void when_account_not_exist_should_add_account_with_amount() {
+    void when_account_not_exist_should_add_account_with_amount() throws IOException {
         makeADeposit.deposit("newUser", 12.5);
 
         var result = accountRepository.findByName("newUser");
@@ -28,7 +30,7 @@ class MakeADepositTest {
     }
 
     @Test
-    void when_account_exist_should_add_amount_in_existing_account() {
+    void when_account_exist_should_add_amount_in_existing_account() throws IOException {
         makeADeposit.deposit("jane", 12.5);
 
         var result = accountRepository.findByName("jane");
