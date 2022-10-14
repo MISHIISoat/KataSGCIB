@@ -14,11 +14,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 class DepositTest {
     private Deposit makeADeposit;
     private AccountRepository accountRepository;
+    private FakeHistoryRepository historyRepository;
 
     @BeforeEach
     void setup() {
         accountRepository = new FakeAccountRepository();
-        makeADeposit = new Deposit(accountRepository, new FakeHistoryRepository(), new FakeLogger());
+        historyRepository = new FakeHistoryRepository();
+        makeADeposit = new Deposit(accountRepository, historyRepository, new FakeLogger());
     }
 
     @Test
@@ -47,4 +49,20 @@ class DepositTest {
                 .isExactlyInstanceOf(ForbiddenAccountException.class)
                 .hasMessage("The amount to deposit can't be negative");
     }
+
+    @Test
+    void when_after_deposit_amount_should_add_operation_in_history() throws ForbiddenAccountException, IOException {
+        var beforeDepositAccount = accountRepository.findByName("jane").orElseThrow();
+        var amountToDeposit = 12.5;
+        makeADeposit.execute("jane", 12.5);
+
+        var depositOperation = historyRepository.getAllAccounts().stream().
+                filter(operation -> operation.accountName().equals("jane")
+                        && operation.amount().equals(amountToDeposit)
+                        && operation.balance().equals(beforeDepositAccount.amount() + amountToDeposit)
+                )
+                .findFirst();
+        assertThat(depositOperation).isPresent();
+    }
+
 }
