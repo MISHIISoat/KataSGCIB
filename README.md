@@ -1,5 +1,16 @@
 ## Kata SGCIB
 
+Prerequisite:
+
+- Java 17
+- Maven
+
+Before to run the kata you need to compile the application with this command :
+
+```
+mvn clean package
+```
+
 ### User Stories
 
 ##### US 1:
