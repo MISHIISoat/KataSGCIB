@@ -25,7 +25,7 @@ I want to make a withdrawal from my account
 
 Example of command to withdraw 20€ in john account
 ```
-java -jar target/katasgcib-1.0-SNAPSHOT-shaded.jar deposit 10 user
+java -jar target/katasgcib-1.0-SNAPSHOT-shaded.jar withdraw 20 user
 ```
 
 ·         US 3:
