@@ -25,51 +25,56 @@ public class Application {
         var logger = new ConsoleLogger();
         if (args.length < 2) {
             logger.err("Not enough arguments");
+            return;
         }
         var action = args[0];
         if (action.equals("deposit") && args.length != 3) {
             logger.err("Deposit need 3 arguments");
+            return;
         }
 
         var fileReader = new DefaultFileReader(logger);
         var fileWriter = new DefaultFileWriter();
         var accountParser = new AccountParserImpl(fileReader, fileWriter);
-        var accountRepository = new AccountRepositoryImpl(accountParser);
-
         var historyParser = new HistoryParserImpl(fileReader, fileWriter);
-        var historyRepository = new HistoryRepositoryImpl(historyParser);
 
+        var accountRepository = new AccountRepositoryImpl(accountParser);
+        var historyRepository = new HistoryRepositoryImpl(historyParser);
 
         var makeADeposit = new Deposit(accountRepository, historyRepository, logger);
         var withDraw = new Withdraw(accountRepository, historyRepository, logger);
         var history = new History(accountRepository, historyRepository);
 
         switch (action) {
-            case "deposit", "withdraw" -> {
-                try {
-                    var amount = Double.valueOf(args[1]);
-                    var accountName = args[2];
-                    if (action.equals("deposit")) {
-                        makeADeposit.execute(accountName, amount);
-
-                    } else {
-                        withDraw.execute(accountName, amount);
-                    }
-                } catch (IOException | ForbiddenAccountException | NotFoundAccountException e) {
-                    logger.err(e.getMessage());
-                }
-            }
-            case "history" -> {
-                var accountName = args[1];
-                try {
-                    var result = history.execute(accountName);
-                    logger.out(MessageFormat.format("History of {0} account :", accountName));
-                    logger.out(result);
-                } catch (IOException | NotFoundAccountException e) {
-                    logger.err(e.getMessage());
-                }
-            }
+            case "deposit", "withdraw" -> depositOrWithdraw(args, logger, action, makeADeposit, withDraw);
+            case "history" -> history(args, logger, history);
             default -> logger.err("Unknown action");
+        }
+    }
+
+    private static void depositOrWithdraw(String[] args, ConsoleLogger logger, String action, Deposit makeADeposit, Withdraw withDraw) {
+        try {
+            var amount = Double.valueOf(args[1]);
+            var accountName = args[2];
+            if (action.equals("deposit")) {
+                makeADeposit.execute(accountName, amount);
+
+            } else {
+                withDraw.execute(accountName, amount);
+            }
+        } catch (IOException | ForbiddenAccountException | NotFoundAccountException e) {
+            logger.err(e.getMessage());
+        }
+    }
+
+    private static void history(String[] args, ConsoleLogger logger, History history) {
+        var accountName = args[1];
+        try {
+            var result = history.execute(accountName);
+            logger.out(MessageFormat.format("History of {0} account :", accountName));
+            logger.out(result);
+        } catch (IOException | NotFoundAccountException e) {
+            logger.err(e.getMessage());
         }
     }
 }
