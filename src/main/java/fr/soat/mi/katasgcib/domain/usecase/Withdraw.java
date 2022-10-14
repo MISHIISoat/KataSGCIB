@@ -35,6 +35,6 @@ public class Withdraw {
         var updateAccount = new Account(account.name(), account.amount() - amount);
         accountRepository.update(updateAccount);
 
-        historyRepository.addOperation(new Operation("withdraw", LocalDate.now(), amount, account.amount() - amount, accountName));
+        historyRepository.addOperation(new Operation("withdraw", LocalDate.now(), amount, updateAccount.amount(), accountName));
     }
 }
