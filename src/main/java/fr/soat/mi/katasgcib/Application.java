@@ -28,8 +28,8 @@ public class Application {
             return;
         }
         var action = args[0];
-        if (action.equals("deposit") && args.length != 3) {
-            logger.err("Deposit need 3 arguments");
+        if (action.equals("deposit") && args.length != 3 || action.equals("withdraw") && args.length != 3 ) {
+            logger.err("This action need 3 arguments");
             return;
         }
 
