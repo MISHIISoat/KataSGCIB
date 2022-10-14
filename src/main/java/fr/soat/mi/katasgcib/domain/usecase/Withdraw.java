@@ -36,5 +36,7 @@ public class Withdraw {
         accountRepository.update(updateAccount);
 
         historyRepository.addOperation(new Operation("withdraw", LocalDate.now(), amount, updateAccount.amount(), accountName));
+
+        logger.out(MessageFormat.format("Retrieve {0} in {1} account, total amount : {2}", amount, accountName, updateAccount.amount()));
     }
 }
