@@ -18,7 +18,7 @@ class DepositTest {
     @BeforeEach
     void setup() {
         accountRepository = new FakeAccountRepository();
-        makeADeposit = new Deposit(accountRepository, new FakeLogger());
+        makeADeposit = new Deposit(accountRepository, new FakeHistoryRepository(), new FakeLogger());
     }
 
     @Test

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -81,4 +82,39 @@ class ApplicationIT {
         }
     }
 
+    @Nested
+    class History {
+        @Test
+        void given_user_deposit_and_withdraw_when_user_want_to_get_history_should_show_all_given_action() throws IOException {
+            Path historyFilePath = Path.of(Application.HISTORY_FILE);
+            if (!Files.deleteIfExists(historyFilePath)) {
+                System.out.println("File not delete");
+            }
+            Path accountFilePath = Path.of(Application.ACCOUNTS_FILE);
+            if (!Files.deleteIfExists(accountFilePath)) {
+                System.out.println("File not delete");
+            }
+            try (var fileWriter = new FileWriter(Application.ACCOUNTS_FILE)) {
+                var contentFile = "name;amount" + System.lineSeparator()
+                        + "john;100.0" + System.lineSeparator()
+                        + "user;10.0" + System.lineSeparator()
+                        + "doe;99.0" + System.lineSeparator();
+                fileWriter.write(contentFile);
+
+                Application.main(new String[]{"deposit", "15", "user"});
+                Application.main(new String[]{"withdraw", "5", "user"});
+
+
+                Application.main(new String[]{"history", "user"});
+
+                var file = new File(Application.HISTORY_FILE);
+                assertThat(file.exists()).isTrue();
+                var content = Files.readString(accountFilePath);
+                var contentLines = content.split(System.lineSeparator());
+
+                assertThat(contentLines[1]).contains("deposit", "user", "15.0", "25.0");
+                assertThat(contentLines[2]).contains("withdraw", "user", "5.0", "20.0");
+            }
+        }
+    }
 }

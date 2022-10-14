@@ -18,7 +18,7 @@ class WithdrawTest {
     @BeforeEach
     void setup() {
         accountRepository = new FakeAccountRepository();
-        withdraw = new Withdraw(accountRepository);
+        withdraw = new Withdraw(accountRepository, new FakeHistoryRepository(), new FakeLogger());
     }
 
     @Test
