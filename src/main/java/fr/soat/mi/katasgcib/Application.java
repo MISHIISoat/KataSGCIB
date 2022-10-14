@@ -1,7 +1,7 @@
 package fr.soat.mi.katasgcib;
 
-import fr.soat.mi.katasgcib.domain.usecase.ForbiddenAccount;
-import fr.soat.mi.katasgcib.domain.usecase.MakeADeposit;
+import fr.soat.mi.katasgcib.domain.exception.ForbiddenAccountException;
+import fr.soat.mi.katasgcib.domain.usecase.Deposit;
 import fr.soat.mi.katasgcib.infra.logger.ConsoleLogger;
 import fr.soat.mi.katasgcib.infra.parser.AccountParserImpl;
 import fr.soat.mi.katasgcib.infra.parser.DefaultFileReader;
@@ -29,14 +29,14 @@ public class Application {
         var accountParser = new AccountParserImpl(fileReader, fileWriter);
         var accountRepository = new AccountRepositoryImpl(accountParser);
 
-        var makeADeposit = new MakeADeposit(accountRepository, logger);
+        var makeADeposit = new Deposit(accountRepository, logger);
 
         var amount = args[1];
         var accountName = args[2];
 
         try {
-            makeADeposit.deposit(accountName, Double.valueOf(amount));
-        } catch (IOException | ForbiddenAccount e) {
+            makeADeposit.execute(accountName, Double.valueOf(amount));
+        } catch (IOException | ForbiddenAccountException e) {
             logger.err("Problem when make a deposit : " + e.getMessage());
         }
     }

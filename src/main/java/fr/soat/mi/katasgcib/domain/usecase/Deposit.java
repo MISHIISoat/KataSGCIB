@@ -1,5 +1,6 @@
 package fr.soat.mi.katasgcib.domain.usecase;
 
+import fr.soat.mi.katasgcib.domain.exception.ForbiddenAccountException;
 import fr.soat.mi.katasgcib.domain.model.Account;
 import fr.soat.mi.katasgcib.domain.repository.AccountRepository;
 import fr.soat.mi.katasgcib.infra.logger.Logger;
@@ -7,18 +8,18 @@ import fr.soat.mi.katasgcib.infra.logger.Logger;
 import java.io.IOException;
 import java.text.MessageFormat;
 
-public class MakeADeposit {
+public class Deposit {
     private final AccountRepository accountRepository;
     private final Logger logger;
 
-    public MakeADeposit(AccountRepository accountRepository, Logger logger) {
+    public Deposit(AccountRepository accountRepository, Logger logger) {
         this.accountRepository = accountRepository;
         this.logger = logger;
     }
 
-    public void deposit(String accountName, Double amount) throws IOException, ForbiddenAccount {
+    public void execute(String accountName, Double amount) throws IOException, ForbiddenAccountException {
         if (amount < 0) {
-            throw new ForbiddenAccount("The amount to deposit can't be negative");
+            throw new ForbiddenAccountException("The amount to deposit can't be negative");
         }
         Double total = saveAccountDeposit(accountName, amount);
 

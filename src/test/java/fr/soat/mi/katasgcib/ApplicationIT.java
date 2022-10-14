@@ -13,7 +13,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class ApplicationIT {
 
     @Nested
-    class MakeADeposit {
+    class Deposit {
         @Test
         void when_account_csv_not_exist_and_deposit_15_to_user_account_should_create_accounts_csv_with_user_account_to_15() throws Exception {
             Path accountFilePath = Path.of(Application.ACCOUNTS_FILE);
@@ -49,6 +49,32 @@ class ApplicationIT {
             var expectedResult = "name;amount" + System.lineSeparator()
                     + "john;100.0" + System.lineSeparator()
                     + "user;25.0" + System.lineSeparator()
+                    + "doe;99.0" + System.lineSeparator();
+
+            assertThat(content).isEqualTo(expectedResult);
+        }
+    }
+
+
+    @Nested
+    class Withdraw {
+        @Test
+        void when_account_csv_contain_user_account_to_10_when_user_withdraw_5_user_account_should_be_5() throws Exception {
+            try (var fileWriter = new FileWriter(Application.ACCOUNTS_FILE)) {
+                var contentFile = "name;amount" + System.lineSeparator()
+                        + "john;100.0" + System.lineSeparator()
+                        + "user;10.0" + System.lineSeparator()
+                        + "doe;99.0" + System.lineSeparator();
+                fileWriter.write(contentFile);
+            }
+            Application.main(new String[]{"withdraw", "5", "user"});
+
+            var file = new File(Application.ACCOUNTS_FILE);
+            assertThat(file.exists()).isTrue();
+            var content = Files.readString(Path.of(Application.ACCOUNTS_FILE));
+            var expectedResult = "name;amount" + System.lineSeparator()
+                    + "john;100.0" + System.lineSeparator()
+                    + "user;5.0" + System.lineSeparator()
                     + "doe;99.0" + System.lineSeparator();
 
             assertThat(content).isEqualTo(expectedResult);
