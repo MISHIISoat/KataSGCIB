@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -101,22 +100,18 @@ class ApplicationIT {
                         + "user;10.0" + System.lineSeparator()
                         + "doe;99.0" + System.lineSeparator();
                 fileWriter.write(contentFile);
-
-                Application.main(new String[]{"deposit", "15", "user"});
-                Application.main(new String[]{"withdraw", "5", "user"});
-
-
-                Application.main(new String[]{"history", "user"});
-
-                var file = new File(Application.HISTORY_FILE);
-                assertThat(file.exists()).isTrue();
-                var content = Files.readString(historyFilePath);
-                var contentLines = content.split(System.lineSeparator());
-                System.out.println(Arrays.toString(contentLines));
-
-                assertThat(contentLines[1]).contains("deposit", "user", "15.0", "25.0");
-                assertThat(contentLines[2]).contains("withdraw", "user", "5.0", "20.0");
             }
+
+            Application.main(new String[]{"deposit", "15.0", "user"});
+
+            Application.main(new String[]{"history", "user"});
+
+            var file = new File(Application.HISTORY_FILE);
+            assertThat(file.exists()).isTrue();
+            var content = Files.readString(historyFilePath);
+            var contentLines = content.split(System.lineSeparator());
+
+            assertThat(contentLines[1]).contains("deposit", "user", "15.0", "25.0");
         }
     }
 }
