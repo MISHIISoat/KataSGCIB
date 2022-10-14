@@ -43,7 +43,7 @@ public class Deposit {
             var accountToUpdate = new Account(foundAccount.name(), total);
             accountRepository.update(accountToUpdate);
         }
-        historyRepository.addOperation(new Operation("deposit", LocalDate.now(), amount, total));
+        historyRepository.addOperation(new Operation("deposit", LocalDate.now(), amount, total, accountName));
         return total;
     }
 }

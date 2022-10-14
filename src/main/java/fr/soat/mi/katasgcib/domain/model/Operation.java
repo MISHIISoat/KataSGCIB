@@ -6,7 +6,8 @@ public record Operation(
         String name,
         LocalDate date,
         Double amount,
-        Double balance
+        Double balance,
+        String accountName
 ) {
 
 }

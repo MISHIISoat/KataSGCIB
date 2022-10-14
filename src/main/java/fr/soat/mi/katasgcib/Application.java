@@ -42,11 +42,10 @@ public class Application {
 
         var makeADeposit = new Deposit(accountRepository, historyRepository, logger);
         var withDraw = new Withdraw(accountRepository, historyRepository, logger);
-        var history = new History(accountRepository, historyRepository, logger);
+        var history = new History(accountRepository, historyRepository);
 
         switch (action) {
-            case "deposit":
-            case "withdraw": {
+            case "deposit", "withdraw" -> {
                 try {
                     var amount = Double.valueOf(args[1]);
                     var accountName = args[2];
@@ -59,23 +58,18 @@ public class Application {
                 } catch (IOException | ForbiddenAccountException | NotFoundAccountException e) {
                     logger.err(e.getMessage());
                 }
-                break;
             }
-            case "history": {
+            case "history" -> {
                 var accountName = args[1];
                 try {
                     var result = history.execute(accountName);
                     logger.out(MessageFormat.format("History of {0} account :", accountName));
                     logger.out(result);
-                } catch (IOException e) {
+                } catch (IOException | NotFoundAccountException e) {
                     logger.err(e.getMessage());
                 }
-
-                break;
             }
-            default: {
-                logger.err("Unknown action");
-            }
+            default -> logger.err("Unknown action");
         }
     }
 }

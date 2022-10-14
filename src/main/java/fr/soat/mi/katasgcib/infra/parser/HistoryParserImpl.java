@@ -38,7 +38,8 @@ public class HistoryParserImpl implements HistoryParser {
         var date = splitLine[1];
         var amount = splitLine[2];
         var balance = splitLine[3];
-        return new Operation(name, LocalDate.parse(date), Double.valueOf(amount), Double.valueOf(balance));
+        var accountName = splitLine[4];
+        return new Operation(name, LocalDate.parse(date), Double.valueOf(amount), Double.valueOf(balance), accountName);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class HistoryParserImpl implements HistoryParser {
     }
 
     private String getHeader() {
-        return "operation;date;amount;balance" + System.lineSeparator();
+        return "operation;date;amount;balance;accountName" + System.lineSeparator();
     }
 
 
@@ -58,7 +59,8 @@ public class HistoryParserImpl implements HistoryParser {
                 .map(operation -> operation.name() + ";" +
                         operation.date().toString() + ";" +
                         operation.amount() + ";" +
-                        operation.balance() +
+                        operation.balance() + ";" +
+                        operation.accountName() +
                         System.lineSeparator()).collect(Collectors.joining());
     }
 }

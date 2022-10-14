@@ -16,7 +16,7 @@ public class HistoryRepositoryImpl implements HistoryRepository {
     }
 
     @Override
-    public List<Operation> getAllOperation() throws IOException {
+    public List<Operation> getAllAccounts() throws IOException {
         return historyParser.getAllOperations();
     }
 

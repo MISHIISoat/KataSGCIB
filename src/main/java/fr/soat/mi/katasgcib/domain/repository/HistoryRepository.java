@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface HistoryRepository {
 
-    List<Operation> getAllOperation() throws IOException;
+    List<Operation> getAllAccounts()throws IOException;
 
     void addOperation(Operation operation) throws IOException;
 }

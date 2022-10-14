@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -109,8 +110,9 @@ class ApplicationIT {
 
                 var file = new File(Application.HISTORY_FILE);
                 assertThat(file.exists()).isTrue();
-                var content = Files.readString(accountFilePath);
+                var content = Files.readString(historyFilePath);
                 var contentLines = content.split(System.lineSeparator());
+                System.out.println(Arrays.toString(contentLines));
 
                 assertThat(contentLines[1]).contains("deposit", "user", "15.0", "25.0");
                 assertThat(contentLines[2]).contains("withdraw", "user", "5.0", "20.0");
