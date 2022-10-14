@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class MakeADepositTest {
     private MakeADeposit makeADeposit;
@@ -20,7 +21,7 @@ class MakeADepositTest {
     }
 
     @Test
-    void when_account_not_exist_should_add_account_with_amount() throws IOException {
+    void when_account_not_exist_should_add_account_with_amount() throws IOException, ForbiddenAccount {
         makeADeposit.deposit("newUser", 12.5);
 
         var result = accountRepository.findByName("newUser");
@@ -30,12 +31,19 @@ class MakeADepositTest {
     }
 
     @Test
-    void when_account_exist_should_add_amount_in_existing_account() throws IOException {
+    void when_account_exist_should_add_amount_in_existing_account() throws IOException, ForbiddenAccount {
         makeADeposit.deposit("jane", 12.5);
 
         var result = accountRepository.findByName("jane");
         assertThat(result).isNotEmpty();
         var expectedAccount = new Account("jane", 112.5);
         assertThat(result.get()).isEqualTo(expectedAccount);
+    }
+
+    @Test
+    void when_amount_to_deposit_is_negative_should_throw_exception() {
+        assertThatThrownBy(() -> makeADeposit.deposit("jane", -12.5))
+                .isExactlyInstanceOf(ForbiddenAccount.class)
+                .hasMessage("The amount to deposit can't be negative");
     }
 }

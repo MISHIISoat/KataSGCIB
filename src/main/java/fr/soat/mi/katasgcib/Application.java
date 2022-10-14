@@ -1,5 +1,6 @@
 package fr.soat.mi.katasgcib;
 
+import fr.soat.mi.katasgcib.domain.usecase.ForbiddenAccount;
 import fr.soat.mi.katasgcib.domain.usecase.MakeADeposit;
 import fr.soat.mi.katasgcib.infra.logger.ConsoleLogger;
 import fr.soat.mi.katasgcib.infra.parser.AccountParserImpl;
@@ -35,7 +36,7 @@ public class Application {
 
         try {
             makeADeposit.deposit(accountName, Double.valueOf(amount));
-        } catch (IOException e) {
+        } catch (IOException | ForbiddenAccount e) {
             logger.err("Problem when make a deposit : " + e.getMessage());
         }
     }

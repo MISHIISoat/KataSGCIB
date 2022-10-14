@@ -16,7 +16,16 @@ public class MakeADeposit {
         this.logger = logger;
     }
 
-    public void deposit(String accountName, Double amount) throws IOException {
+    public void deposit(String accountName, Double amount) throws IOException, ForbiddenAccount {
+        if (amount < 0) {
+            throw new ForbiddenAccount("The amount to deposit can't be negative");
+        }
+        Double total = saveAccountDeposit(accountName, amount);
+
+        logger.out(MessageFormat.format("Save {0} in {1} account, total amount : {2}", amount, accountName, total));
+    }
+
+    private Double saveAccountDeposit(String accountName, Double amount) throws IOException {
         var maybeAccount = accountRepository.findByName(accountName);
         var total = amount;
         if (maybeAccount.isEmpty()) {
@@ -28,7 +37,6 @@ public class MakeADeposit {
             var accountToUpdate = new Account(foundAccount.name(), total);
             accountRepository.update(accountToUpdate);
         }
-
-        logger.out(MessageFormat.format("Save {0} in {1} account, total amount : {2}", amount, accountName, total));
+        return total;
     }
 }
