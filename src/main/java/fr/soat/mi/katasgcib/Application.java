@@ -28,7 +28,7 @@ public class Application {
         var accountParser = new AccountParserImpl(fileReader, fileWriter);
         var accountRepository = new AccountRepositoryImpl(accountParser);
 
-        var makeADeposit = new MakeADeposit(accountRepository);
+        var makeADeposit = new MakeADeposit(accountRepository, logger);
 
         var amount = args[1];
         var accountName = args[2];
